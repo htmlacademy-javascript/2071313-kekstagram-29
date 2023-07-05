@@ -1,27 +1,25 @@
 import {getRandomElement, getRandomInteger} from './util.js';
-import {PICTURE_URL_COUNT, AVATAR_COUNT, LIKE_MIN_COUNT, LIKE_MAX_COUNT, COMMENT_COUNT, COMMENTS, DESCRIPTIONS, NAMES} from './setup.js';
+import {OBJECT_COUNT, PICTURE_URL_COUNT, AVATAR_COUNT, LIKE_MIN_COUNT, LIKE_MAX_COUNT, COMMENT_COUNT, COMMENTS, DESCRIPTIONS, NAMES} from './setup.js';
 
-// Функция для получения массива обьектов с комментариями
-const createCommentsArray = () => {
-// Рандомное число - кол-во комментариев к фотографии
-  const randomNumber = getRandomInteger(1, COMMENT_COUNT);
-  // Пустой массив с будущими обьектами содержащими комментарии
-  const commentsArray = [];
-  // Цикл создает колличество обьектов с комментариями
-  for (let i = 0; i < randomNumber; i++) {
+const createCommentsArray = () => { // Функция для получения массива обьектов с комментариями
+
+  const randomNumber = getRandomInteger(1, COMMENT_COUNT); // Рандомное число - кол-во комментариев к фотографии
+  const commentsArray = []; // Пустой массив с будущими обьектами содержащими комментарии
+
+  for (let i = 0; i < randomNumber; i++) { // Цикл создает колличество обьектов с комментариями
     const avatar = `img/avatar-${getRandomInteger(1, AVATAR_COUNT)}.svg`;
     const id = i + 1;
     const message = getRandomElement(COMMENTS);
     const name = getRandomElement(NAMES);
-    // Обьект с комментариями, именами, айди и аватаркой
-    const comment = {
+
+    const comment = { // Обьект с комментариями, именами, айди и аватаркой
       id,
       avatar,
       message,
       name,
     };
-    // Добавляем элементы в массив
-    commentsArray.push(comment);
+
+    commentsArray.push(comment); // Добавление элементов в массив
   }
 
   return commentsArray;
@@ -51,6 +49,8 @@ const createPhotoArray = (count) => {
   return photoArray;
 };
 
-export {createPhotoArray};
+const pictures = createPhotoArray(OBJECT_COUNT);
+
+export {pictures};
 
 
