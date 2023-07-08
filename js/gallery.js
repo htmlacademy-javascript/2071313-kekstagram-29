@@ -4,9 +4,10 @@ const pictureTemplate = document.querySelector('#picture').content.querySelector
 // Функция по созданию одной фото миниатюры
 const createPicture = ({ comments, description, likes, url }) => { // Деструктуризация параметров функции
   const picture = pictureTemplate.cloneNode(true); // Клонируем шаблон
+  const image = picture.querySelector('.picture__img'); // Заводим переменную для повторяющегося элемента для url и description
 
-  picture.querySelector('.picture__img').src = url; // Находим элемент и заполняем его через точку записывая свойство атрибута
-  picture.querySelector('.picture__img').alt = description;
+  image.src = url; // Находим элемент и заполняем его через точку записывая свойство атрибута
+  image.alt = description;
   picture.querySelector('.picture__comments').textContent = comments.length; // Кол-во элементов массива комментариев
   picture.querySelector('.picture__likes').textContent = likes;
 
