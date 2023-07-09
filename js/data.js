@@ -1,5 +1,5 @@
 import {getRandomElement, getRandomInteger} from './util.js';
-import {OBJECT_COUNT, PICTURE_URL_COUNT, AVATAR_COUNT, LIKE_MIN_COUNT, LIKE_MAX_COUNT, COMMENT_COUNT, COMMENTS, DESCRIPTIONS, NAMES} from './setup.js';
+import {PICTURE_URL_COUNT, AVATAR_COUNT, LIKE_MIN_COUNT, LIKE_MAX_COUNT, COMMENT_COUNT, COMMENTS, DESCRIPTIONS, NAMES} from './setup.js';
 
 const createCommentsArray = () => { // Функция для получения массива обьектов с комментариями
 
@@ -49,8 +49,6 @@ const createPhotoArray = (count) => {
   return photoArray;
 };
 
-const pictures = createPhotoArray(OBJECT_COUNT);
-
-export {pictures};
+export {createPhotoArray};
 
 

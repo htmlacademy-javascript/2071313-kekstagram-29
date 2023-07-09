@@ -1,4 +1,7 @@
+import { OBJECT_COUNT } from './setup.js';
 import { createGallery } from './gallery.js';
-import {pictures} from './data.js';
+import { createPhotoArray } from './data.js';
 
-createGallery(pictures);
+const picture = createPhotoArray(OBJECT_COUNT);
+
+createGallery(picture);
