@@ -51,8 +51,4 @@ const createPhotoArray = (count) => {
 
 export {createPhotoArray};
 
-// const pictures = createPhotoArray(OBJECT_COUNT);
-
-// export {pictures};
-
 
