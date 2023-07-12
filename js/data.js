@@ -1,7 +1,7 @@
 import {getRandomElement, getRandomInteger} from './util.js';
 import {PICTURE_URL_COUNT, AVATAR_COUNT, LIKE_MIN_COUNT, LIKE_MAX_COUNT, COMMENT_COUNT, COMMENTS, DESCRIPTIONS, NAMES} from './setup.js';
 
-const createCommentsArray = () => { // Функция для получения массива обьектов с комментариями
+const createComments = () => { // Функция для получения массива обьектов с комментариями
 
   const randomNumber = getRandomInteger(1, COMMENT_COUNT); // Рандомное число - кол-во комментариев к фотографии
   const commentsArray = []; // Пустой массив с будущими обьектами содержащими комментарии
@@ -25,14 +25,14 @@ const createCommentsArray = () => { // Функция для получения 
   return commentsArray;
 };
 
-const createPhotoArray = (count) => {
+const createPhotos = (count) => {
   const photoArray = [];
 
   for (let i = 0; i < count; i++) {
     const id = i + 1;
     const url = `photos/${getRandomInteger(1, PICTURE_URL_COUNT)}.jpg`;
     const description = getRandomElement(DESCRIPTIONS);
-    const comments = createCommentsArray();
+    const comments = createComments();
     const likes = getRandomInteger(LIKE_MIN_COUNT, LIKE_MAX_COUNT);
 
     const photo = {
@@ -49,6 +49,6 @@ const createPhotoArray = (count) => {
   return photoArray;
 };
 
-export {createPhotoArray};
+export {createPhotos};
 
 
