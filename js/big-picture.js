@@ -1,10 +1,10 @@
 const COMMENTS_PER_PORTION = 5; // Кол-во комментариев показываемых за раз
-const bodyElement = document. querySelector ('body') ; // Находим все необходимые элементы в разметке
+const bodyElement = document.querySelector('body') ; // Находим все необходимые элементы в разметке
 const bigPicture = document.querySelector('.big-picture');
 const bigPictureComments = bigPicture.querySelector('.social__comments');
-const cancelButtonElement = bigPicture. querySelector('.big-picture__cancel');
+const cancelButtonElement = bigPicture.querySelector('.big-picture__cancel');
 const commentElement = bigPictureComments.querySelector('.social__comment');
-const commentsLoader = bigPicture.querySelector ('.comments-loader');
+const commentsLoader = bigPicture.querySelector('.comments-loader');
 const commentCount = bigPicture.querySelector('.social__comment-count');
 
 let commentsShown = 0; // Кол-во комментариев уже показанных. По умолчанию 0
@@ -13,9 +13,9 @@ let сomments = []; // Массив комментариев
 // Функция по отрисовки комментариев
 const createComment = ({ avatar, name, message }) => { // Деструктуризация параметров функции
   const commentCopy = commentElement.cloneNode(true); // Записываем соответсвующие значения в свойства элементов
-  commentCopy.querySelector ('.social__picture').src = avatar;
-  commentCopy.querySelector ('.social__picture').alt = name;
-  commentCopy.querySelector ('.social__text').textContent = message;
+  commentCopy.querySelector('.social__picture').src = avatar;
+  commentCopy.querySelector('.social__picture').alt = name;
+  commentCopy.querySelector('.social__text').textContent = message;
 
   return commentCopy;
 };
