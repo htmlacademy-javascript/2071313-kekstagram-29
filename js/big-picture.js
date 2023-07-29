@@ -81,5 +81,11 @@ const showBigPicture = (data) => { // Функция для показа мод�
 
 cancelButtonElement.addEventListener('click', onCancelButtonClick); // Закрытие модалки по нажатию на кнопку закрытия
 
+bigPicture.addEventListener('click', (evt) => { // Закрытие модального окна по оверлэю
+  if (evt.target === bigPicture) {
+    hideBigPicture();
+  }
+});
+
 export { showBigPicture };
 

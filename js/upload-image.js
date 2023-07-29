@@ -1,3 +1,6 @@
+import { initSliderAndScale, resetUserPhotoEffects } from './edit.js';
+import { scaleControlValue } from './scale.js';
+
 const imageInput = document.querySelector('.img-upload__input');
 const preview = document.querySelector('.img-upload__preview').querySelector('img');
 const imageOverlay = document.querySelector('.img-upload__overlay');
@@ -62,6 +65,9 @@ const isTextFieldFocused = () => (
 );
 // Функция скрытия модалки
 const hideModal = () => {
+  resetUserPhotoEffects();
+  scaleControlValue.value = '100%';
+  preview.style.transform = 'none';
   imageOverlay.classList.add('hidden');
   document.removeEventListener('keydown', onDocumentKeydown);
   imageUploadForm.reset();
@@ -69,6 +75,8 @@ const hideModal = () => {
 };
 // Функция показа модалки
 const showModal = () => {
+  initSliderAndScale();
+
   document.addEventListener('keydown', onDocumentKeydown);
   imageOverlay.classList.remove('hidden');
   imageOverlay.addEventListener('click', (evt) => {
