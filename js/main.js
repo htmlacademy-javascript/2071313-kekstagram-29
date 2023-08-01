@@ -1,9 +1,25 @@
-import { OBJECT_COUNT } from './setup.js';
-import { createPhotos } from './data.js';
-import { createGallery } from './gallery.js';
-import './upload-image.js';
-import './scale.js';
+import { createGallery, showFetchGalleryError } from './gallery.js';
+import { addUploadImageHandler } from './upload-image.js';
+import { fetchGallery } from './network-loading.js';
+import { addScaleHandlers } from './scale.js';
+import { addFiltersListener } from './gallary-filters.js';
 
-const pictures = createPhotos(OBJECT_COUNT);
+export let picturesData = [];
 
-createGallery(pictures);
+const filters = document.querySelector('.img-filters');
+
+const onGallaryLoadSuccess = (gallery) => {
+  picturesData = gallery;
+  addFiltersListener();
+  createGallery(gallery);
+  filters.classList.remove('img-filters--inactive');
+};
+
+export const loadGallery = () => {
+  fetchGallery(onGallaryLoadSuccess, showFetchGalleryError);
+};
+
+loadGallery();
+addScaleHandlers();
+addUploadImageHandler();
+
