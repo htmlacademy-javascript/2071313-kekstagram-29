@@ -1,7 +1,10 @@
-import {showBigPicture} from './big-picture.js';
+import { showBigPicture } from './big-picture.js';
+import { loadGallery } from './main.js';
+import { filtersHandleClick } from './gallary-filters.js';
 
 const container = document.querySelector('.pictures'); // Поиск контейнера с классом в разметке
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture'); // Поиск шаблона и его содержимого
+const filters = document.querySelector('.img-filters');
 
 // Функция по созданию одной фото миниатюры
 const createPicture = ({ comments, description, likes, url, id }) => { // Деструктуризация параметров функции
@@ -42,4 +45,59 @@ const createGallery = (picturesData) => { // Параметр функции э�
   });
 };
 
-export {createGallery};
+const showFetchGalleryError = () => {
+  filters.classList.add('img-filters--inactive');
+  filters.removeEventListener('click', filtersHandleClick);
+
+  const errorFragment = document.createDocumentFragment();
+  const errorContainer = document.createElement('section');
+  const inner = document.createElement('div');
+  const errorHeader = document.createElement('h2');
+  const errorButton = document.createElement('button');
+
+  errorContainer.classList.add('error');
+  inner.classList.add('error__inner');
+  errorHeader.classList.add('error__title');
+  errorButton.classList.add('error__button');
+
+  errorHeader.textContent = 'Ошибка загрузки данных';
+  errorButton.textContent = 'Повторить загрузку';
+
+
+  errorButton.addEventListener('click', loadGallery);
+
+  inner.appendChild(errorHeader);
+  inner.appendChild(errorButton);
+  errorContainer.appendChild(inner);
+
+  errorFragment.appendChild(errorContainer);
+
+  document.body.appendChild(errorFragment);
+
+  const handleErrorKeyDown = (event) => {
+    if (event.key === 'Escape') {
+      hideError();
+    }
+  };
+
+  const handleOverlayClick = (evt) => {
+    if (evt.target === errorContainer) {
+      hideError();
+    }
+  };
+
+
+  function hideError() {
+    document.body.removeChild(errorContainer);
+    document.addEventListener('keydown', handleErrorKeyDown);
+    document.removeEventListener('keydown', handleErrorKeyDown);
+    document.removeEventListener('click', loadGallery);
+  }
+
+  document.removeEventListener('keydown', handleErrorKeyDown);
+  document.addEventListener('keydown', handleErrorKeyDown);
+  document.addEventListener('click', handleOverlayClick);
+
+};
+
+export { createGallery, showFetchGalleryError };
