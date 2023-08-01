@@ -1,9 +1,8 @@
-import { OBJECT_COUNT } from './setup.js';
-import { createPhotos } from './data.js';
-import { createGallery } from './gallery.js';
-import './upload-image.js';
-import './scale.js';
+import { createGallery, showFetchGalleryError } from './gallery.js';
+import { addUploadImageHandler } from './upload-image.js';
+import { fetchGallery } from './network-loading.js';
+import { addScaleHandlers } from './scale.js';
 
-const pictures = createPhotos(OBJECT_COUNT);
-
-createGallery(pictures);
+fetchGallery(createGallery, showFetchGalleryError);
+addScaleHandlers();
+addUploadImageHandler();

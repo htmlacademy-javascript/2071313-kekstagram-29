@@ -1,4 +1,5 @@
 import { initSliderAndScale, resetUserPhotoEffects } from './edit.js';
+import { uploadPhoto } from './network-loading.js';
 import { scaleControlValue } from './scale.js';
 
 const imageInput = document.querySelector('.img-upload__input');
@@ -116,7 +117,83 @@ imageInput.addEventListener('change', uploadImage); // Добавляем соб
 
 cancelUploadButton.addEventListener('click', hideModal); // Закрытие модалки по нажатию на кнопку закрытия
 
-imageUploadForm.addEventListener('submit', (evt) => { // Отправка формы
-  evt.preventDefault();
-});
+const handleErrorKeyDown = (event) => {
+  if (event.key === 'Escape') {
+    hideError();
+  }
+};
 
+const handleErrorClick = (event) => {
+  if (
+    event.target.classList.contains('error') ||
+    event.target.classList.contains('error__button')
+  ) {
+    hideError();
+  }
+};
+
+function hideError() {
+  const child = document.querySelector('.error');
+  document.body.removeChild(child);
+  document.addEventListener('keydown', onDocumentKeydown);
+  document.removeEventListener('keydown', handleErrorKeyDown);
+  document.removeEventListener('click', handleErrorClick);
+}
+
+const showError = () => {
+  const errorTemplate = document.getElementById('error');
+  const errorClone = errorTemplate.content.cloneNode(true);
+
+  document.body.appendChild(errorClone);
+  document.removeEventListener('keydown', onDocumentKeydown);
+
+
+  document.addEventListener('keydown', handleErrorKeyDown);
+  document.addEventListener('click', handleErrorClick);
+};
+
+const handleSuccessKeyDown = (event) => {
+  if (event.key === 'Escape') {
+    hideSuccess();
+  }
+};
+
+const handleSuccessClick = (event) => {
+  if (
+    event.target.classList.contains('success') ||
+    event.target.classList.contains('success__button')
+  ) {
+    hideSuccess();
+  }
+};
+
+function hideSuccess() {
+  const child = document.querySelector('.success');
+  document.body.removeChild(child);
+  document.removeEventListener('keydown', handleSuccessKeyDown);
+  document.removeEventListener('click', handleSuccessClick);
+}
+
+const showSuccess = () => {
+  const succsessTemplate = document.getElementById('success');
+  const succsessClone = succsessTemplate.content.cloneNode(true);
+
+  document.body.appendChild(succsessClone);
+  hideModal();
+
+  document.addEventListener('keydown', handleSuccessKeyDown);
+  document.addEventListener('click', handleSuccessClick);
+};
+
+const addUploadImageHandler = () => {
+  imageUploadForm.addEventListener('submit', (evt) => { // Отправка формы
+    evt.preventDefault();
+    const isValid = pristine.validate();
+    if (isValid) {
+      const formData = new FormData(evt.target);
+      uploadPhoto(formData, showSuccess, showError);
+    }
+  });
+};
+
+export { addUploadImageHandler };

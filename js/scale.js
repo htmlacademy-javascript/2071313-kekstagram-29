@@ -1,8 +1,8 @@
 const MAX_SCALE = 2;
 const MIN_SCALE = 0.25;
 const STEP = 0.25;
-const scaleSmallerButton = document.querySelector('.scale__control--smaller');
-const scaleBiggerButton = document.querySelector('.scale__control--bigger');
+const scaleSmallerHandler = document.querySelector('.scale__control--smaller');
+const scaleBiggerHandler = document.querySelector('.scale__control--bigger');
 const scaleControlValue = document.querySelector('.scale__control--value');
 const imagePreview = document.querySelector('.img-upload__preview img');
 // Функция уменьшения масштаба изображения
@@ -24,8 +24,17 @@ const scaleSmaller = () => {
   }
 };
 
-scaleBiggerButton.addEventListener('click', scaleBigger); // Обработчик по клику на копку больше
+const addHandlersToScale = (evt) => {
+  if (evt.target === scaleSmallerHandler) {
+    scaleSmaller();
+  } else if (evt.target === scaleBiggerHandler) {
+    scaleBigger();
+  }
+};
 
-scaleSmallerButton.addEventListener('click', scaleSmaller); // Обработчик по клику на копку меньше
+const addScaleHandlers = () => {
+  scaleSmallerHandler.addEventListener('click', addHandlersToScale);
+  scaleBiggerHandler.addEventListener('click', addHandlersToScale);
+};
 
-export { imagePreview, scaleControlValue };
+export { imagePreview, scaleControlValue, scaleSmallerHandler, scaleBiggerHandler, addScaleHandlers };

@@ -42,4 +42,64 @@ const createGallery = (picturesData) => { // Параметр функции э�
   });
 };
 
-export {createGallery};
+const showFetchGalleryError = (reloadHandler) => {
+  const errorFragment = document.createDocumentFragment();
+  const errorContainer = document.createElement('section');
+  const inner = document.createElement('div');
+  const errorHeader = document.createElement('h2');
+  const errorButton = document.createElement('button');
+
+  errorContainer.classList.add('error');
+  inner.classList.add('error__inner');
+  errorHeader.classList.add('error__title');
+  errorButton.classList.add('error__button');
+
+  errorHeader.textContent = 'Ошибка загрузки данных';
+  errorButton.textContent = 'Повторить загрузку';
+
+  errorButton.addEventListener('click', reloadHandler);
+
+  inner.appendChild(errorHeader);
+  inner.appendChild(errorButton);
+  errorContainer.appendChild(inner);
+
+  errorFragment.appendChild(errorContainer);
+
+  document.body.appendChild(errorFragment);
+
+  const handleErrorKeyDown = (event) => {
+    if (event.key === 'Escape') {
+      hideError();
+    }
+  };
+
+  const handleErrorClick = (event) => {
+    if (
+      event.target.classList.contains('error') ||
+      event.target.classList.contains('error__button')
+    ) {
+      hideError();
+    }
+  };
+
+  function onDocumentKeydown(evt) {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      hideError();
+    }
+  }
+
+  function hideError() {
+    document.body.removeChild(errorContainer);
+    document.addEventListener('keydown', onDocumentKeydown);
+    document.removeEventListener('keydown', handleErrorKeyDown);
+    document.removeEventListener('click', handleErrorClick);
+  }
+
+  document.removeEventListener('keydown', onDocumentKeydown);
+  document.addEventListener('keydown', handleErrorKeyDown);
+  document.addEventListener('click', handleErrorClick);
+
+};
+
+export { createGallery, showFetchGalleryError };
