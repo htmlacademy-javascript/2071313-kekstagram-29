@@ -2,7 +2,7 @@ import { createGallery, showFetchGalleryError } from './gallery.js';
 import { addUploadImageHandler } from './upload-image.js';
 import { fetchGallery } from './network-loading.js';
 import { addScaleHandlers } from './scale.js';
-import { addFiltersListener } from './gallary-filters.js';
+import { addFiltersListener } from './gallery-filters.js';
 
 export let picturesData = [];
 

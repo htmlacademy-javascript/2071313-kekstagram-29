@@ -1,6 +1,6 @@
 import { showBigPicture } from './big-picture.js';
 import { loadGallery } from './main.js';
-import { filtersHandleClick } from './gallary-filters.js';
+import { filtersHandleClick } from './gallery-filters.js';
 
 const container = document.querySelector('.pictures'); // Поиск контейнера с классом в разметке
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture'); // Поиск шаблона и его содержимого
