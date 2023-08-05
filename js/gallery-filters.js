@@ -1,8 +1,7 @@
 import { createGallery } from './gallery.js';
 import { debounce, shuffle } from './util.js';
-import { picturesData } from './main.js';
+import { pictures } from './main.js';
 
-const galleryContainer = document.querySelector('.pictures');
 const filters = document.querySelector('.img-filters');
 const filterButtons = filters.querySelectorAll('.img-filters__button');
 
@@ -12,12 +11,11 @@ const FILTERS = {
   discussed: 'filter-discussed',
 };
 
-const sortGallery = (array, sort) => {
-  galleryContainer.innerHTML = '';
-  let sorted = [];
+const sortGallery = (photos, sort) => {
+  let sortings = [];
   switch (sort) {
     case FILTERS.discussed:
-      sorted = array.sort((a, b) => {
+      sortings = photos.sort((a, b) => {
         if (a.comments.length > b.comments.length) {
           return -1;
         }
@@ -30,23 +28,29 @@ const sortGallery = (array, sort) => {
       });
       break;
     case FILTERS.random:
-      sorted = shuffle(array);
+      sortings = shuffle(photos).slice(0, 10);
       break;
     default:
-      sorted = array;
+      sortings = photos;
       break;
   }
 
-  return sorted;
+  return sortings;
 };
 
-const renderGallery = debounce((galery, id) => {
-  const sortedGallery = sortGallery(galery, id);
+const renderGallery = debounce((photos, id) => {
+  const pictureElements = document.querySelectorAll('.picture');
+
+  pictureElements.forEach((el) => {
+    el.remove();
+  });
+  const sortedGallery = sortGallery(photos, id);
+
   createGallery(sortedGallery);
 });
 
-const filtersHandleClick = (evt) => {
-  renderGallery([...picturesData], evt.target.id);
+const onFilterClick = (evt) => {
+  renderGallery([...pictures], evt.target.id);
 
   filterButtons.forEach((el) => {
     if (el.id === evt.target.id) {
@@ -58,7 +62,7 @@ const filtersHandleClick = (evt) => {
 };
 
 const addFiltersListener = () => {
-  filters.addEventListener('click', filtersHandleClick);
+  filters.addEventListener('click', onFilterClick);
 };
 
-export { addFiltersListener, filtersHandleClick };
+export { addFiltersListener, onFilterClick };
