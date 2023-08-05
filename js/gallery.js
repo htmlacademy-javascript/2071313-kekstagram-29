@@ -1,6 +1,5 @@
-import { showBigPicture } from './big-picture.js';
-import { loadGallery } from './main.js';
-import { filtersHandleClick } from './gallery-filters.js';
+import { loadGallery as onErrorButtonClick } from './main.js';
+import { onFilterClick } from './gallery-filters.js';
 
 const container = document.querySelector('.pictures'); // Поиск контейнера с классом в разметке
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture'); // Поиск шаблона и его содержимого
@@ -21,33 +20,20 @@ const createPicture = ({ comments, description, likes, url, id }) => { // Дес
 };
 
 // Функция для отрисовки множества фотографий
-const createGallery = (picturesData) => { // Параметр функции это массив с объектами, содержащими инф-цию об отдельной фотографии
+const createGallery = (pictures) => { // Параметр функции это массив с объектами, содержащими инф-цию об отдельной фотографии
   const fragment = document.createDocumentFragment(); // Создаем временное хранилище для элементов
 
-  picturesData.forEach((pictureData) => { // Перебор элементов массива с последующим созданием отдельных DOM-элементов
+  pictures.forEach((pictureData) => { // Перебор элементов массива с последующим созданием отдельных DOM-элементов
     const pictureElement = createPicture(pictureData); // Отдельный DOM-элемент
     fragment.append(pictureElement); // Кладем отдельный DOM-элемент в контейнер - временное хранилище для элементов
   });
 
   container.append(fragment); // Добавляем содержимое хранилища в DOM-дерево
-
-  container.addEventListener('click', (evt) => { // Подписываемся на событие клик для любого из дочерних элементов контейнера
-    const foundElement = evt.target.closest('[data-picture-id]'); // Находим по атрибуту ближайшего родителя для элементов по которым происходит клик
-    if (!foundElement) { // Если элемент не найден событие не происходит
-      return;
-    }
-
-    evt.preventDefault(); // Отмена действия по умолчанию
-    const picture = picturesData.find(
-      (item) => item.id === Number(foundElement.dataset.pictureId) // Извлекаем идентификатор записанный в дата трибуте и приводим его к числу
-    );
-    showBigPicture(picture);
-  });
 };
 
 const showFetchGalleryError = () => {
   filters.classList.add('img-filters--inactive');
-  filters.removeEventListener('click', filtersHandleClick);
+  filters.removeEventListener('click', onFilterClick);
 
   const errorFragment = document.createDocumentFragment();
   const errorContainer = document.createElement('section');
@@ -64,7 +50,7 @@ const showFetchGalleryError = () => {
   errorButton.textContent = 'Повторить загрузку';
 
 
-  errorButton.addEventListener('click', loadGallery);
+  errorButton.addEventListener('click', onErrorButtonClick);
 
   inner.appendChild(errorHeader);
   inner.appendChild(errorButton);
@@ -74,13 +60,13 @@ const showFetchGalleryError = () => {
 
   document.body.appendChild(errorFragment);
 
-  const handleErrorKeyDown = (event) => {
+  const onEscapePress = (event) => {
     if (event.key === 'Escape') {
       hideError();
     }
   };
 
-  const handleOverlayClick = (evt) => {
+  const onOverlayClick = (evt) => {
     if (evt.target === errorContainer) {
       hideError();
     }
@@ -89,14 +75,14 @@ const showFetchGalleryError = () => {
 
   function hideError() {
     document.body.removeChild(errorContainer);
-    document.addEventListener('keydown', handleErrorKeyDown);
-    document.removeEventListener('keydown', handleErrorKeyDown);
-    document.removeEventListener('click', loadGallery);
+    document.addEventListener('keydown', onEscapePress);
+    document.removeEventListener('keydown', onEscapePress);
+    document.removeEventListener('click', onErrorButtonClick);
   }
 
-  document.removeEventListener('keydown', handleErrorKeyDown);
-  document.addEventListener('keydown', handleErrorKeyDown);
-  document.addEventListener('click', handleOverlayClick);
+  document.removeEventListener('keydown', onEscapePress);
+  document.addEventListener('keydown', onEscapePress);
+  document.addEventListener('click', onOverlayClick);
 
 };
 

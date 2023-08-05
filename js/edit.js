@@ -76,23 +76,23 @@ const resetEffects = () => {
 };
 
 // Функция изменения эффектов
-const changeEffect = (evt) => {
+const onChangeEffect = (evt) => {
   resetEffects();
   const effects = sliderEffects[evt.target.value];
-  if (effects.name !== 'none') {
+  if (effects) {
     showSlider(effects);
   }
 };
 
 //Функция обработчик события слайдера
 const initSliderAndScale = () => {
-  sliderEffectsList.addEventListener('change', changeEffect);
+  sliderEffectsList.addEventListener('change', onChangeEffect);
 };
 
 // Функция возврата значения фильтра по умолчанию
 const resetUserPhotoEffects = () => {
   resetEffects();
-  sliderEffectsList.removeEventListener('change', changeEffect);
+  sliderEffectsList.removeEventListener('change', onChangeEffect);
 };
 
 export {initSliderAndScale, resetUserPhotoEffects};

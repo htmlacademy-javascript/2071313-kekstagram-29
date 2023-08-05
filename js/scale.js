@@ -1,4 +1,4 @@
-const MAX_SCALE = 2;
+const MAX_SCALE = 1;
 const MIN_SCALE = 0.25;
 const STEP = 0.25;
 const scaleSmallerHandler = document.querySelector('.scale__control--smaller');
@@ -24,7 +24,7 @@ const scaleSmaller = () => {
   }
 };
 
-const addHandlersToScale = (evt) => {
+const onScaleButtonClick = (evt) => {
   if (evt.target === scaleSmallerHandler) {
     scaleSmaller();
   } else if (evt.target === scaleBiggerHandler) {
@@ -33,8 +33,8 @@ const addHandlersToScale = (evt) => {
 };
 
 const addScaleHandlers = () => {
-  scaleSmallerHandler.addEventListener('click', addHandlersToScale);
-  scaleBiggerHandler.addEventListener('click', addHandlersToScale);
+  scaleSmallerHandler.addEventListener('click', onScaleButtonClick);
+  scaleBiggerHandler.addEventListener('click', onScaleButtonClick);
 };
 
 export { imagePreview, scaleControlValue, scaleSmallerHandler, scaleBiggerHandler, addScaleHandlers };

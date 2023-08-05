@@ -1,6 +1,6 @@
 const COMMENTS_PER_PORTION = 5; // Кол-во комментариев показываемых за раз
 const bodyElement = document.querySelector('body') ; // Находим все необходимые элементы в разметке
-const bigPicture = document.querySelector('.big-picture');
+const bigPicture = document.querySelector('.overlay');
 const bigPictureComments = bigPicture.querySelector('.social__comments');
 const cancelButtonElement = bigPicture.querySelector('.big-picture__cancel');
 const commentElement = bigPictureComments.querySelector('.social__comment');
@@ -20,7 +20,7 @@ const createComment = ({ avatar, name, message }) => { // Деструктури
   return commentCopy;
 };
 // Функция для показа порции комментариев
-const renderComments = () => {
+const onClickLoadComments = () => {
   commentsShown += COMMENTS_PER_PORTION; // Увеличиваем 5
 
   if (commentsShown >= сomments.length) { // Проверяем если кол-во отображаемых комментариев равно длинны массива с комментами то кнопка скрывается
@@ -45,7 +45,9 @@ const hideBigPicture = () => { // Функция для скрытия мода�
   bigPicture.classList.add('hidden');
   bodyElement.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown); // Снятие рбработчика
-  commentsLoader.removeEventListener('click', renderComments); // Отписываемся от события клика по кнопке загрузить еще
+  bigPicture.removeEventListener('click', onBigPictureOverlayClick); // Снятие рбработчика
+  cancelButtonElement.removeEventListener('click', onCancelButtonClick); // Снятие рбработчика
+  commentsLoader.removeEventListener('click', onClickLoadComments); // Отписываемся от события клика по кнопке загрузить еще
   commentsShown = 0; // Обнуляем счетчик показанных комментариев
 };
 
@@ -56,9 +58,16 @@ function onDocumentKeydown(evt) { // Функция для проверки яв
   }
 }
 
-const onCancelButtonClick = () => { // Функция по закрытию модалки
+function onCancelButtonClick() { // Функция по закрытию модалки
   hideBigPicture();
-};
+}
+
+function onBigPictureOverlayClick(evt) { // Закрытие модального окна по оверлэю
+  if (evt.target === bigPicture) {
+    hideBigPicture();
+  }
+}
+
 // Функция по отрисовки фотографии
 const renderPictureDetails = ({ url, likes, description }) => { // Деструктуризация параметров функции
   bigPicture.querySelector('.big-picture__img img').src = url; // Записываем соответсвующие значения в свойства элементов
@@ -73,19 +82,13 @@ const showBigPicture = (data) => { // Функция для показа мод�
   bigPicture.classList.remove('hidden');
   bodyElement.classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
-  commentsLoader.addEventListener('click', renderComments); // Добавляем обработчик события клика по кнопке загрузить ещё
+  commentsLoader.addEventListener('click', onClickLoadComments); // Добавляем обработчик события клика по кнопке загрузить ещё
+  cancelButtonElement.addEventListener('click', onCancelButtonClick); // Закрытие модалки по нажатию на кнопку закрытия
+  bigPicture.addEventListener('click', onBigPictureOverlayClick);
 
   renderPictureDetails(data); // Вызов функции по отрисовки фотографии
-  renderComments(); // Вызов функции по отрисовке комментариев
+  onClickLoadComments(); // Вызов функции по отрисовке комментариев
 };
-
-cancelButtonElement.addEventListener('click', onCancelButtonClick); // Закрытие модалки по нажатию на кнопку закрытия
-
-bigPicture.addEventListener('click', (evt) => { // Закрытие модального окна по оверлэю
-  if (evt.target === bigPicture) {
-    hideBigPicture();
-  }
-});
 
 export { showBigPicture };
 

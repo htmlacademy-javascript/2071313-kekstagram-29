@@ -2,12 +2,14 @@ import { initSliderAndScale, resetUserPhotoEffects } from './edit.js';
 import { uploadPhoto } from './network-loading.js';
 import { scaleControlValue } from './scale.js';
 
+const body = document.querySelector('body');
 const imageInput = document.querySelector('.img-upload__input');
 const preview = document.querySelector('.img-upload__preview').querySelector('img');
 const imageOverlay = document.querySelector('.img-upload__overlay');
 const cancelUploadButton = document.querySelector('.img-upload__cancel');
 const hashtagField = imageOverlay.querySelector('.text__hashtags');
 const commentField = imageOverlay.querySelector('.text__description');
+const submitButton = imageOverlay.querySelector('.img-upload__submit');
 const imageUploadForm = document.querySelector('.img-upload__form');
 const HASHTAG_PATTERN = /^#[a-zа-яё0-9]{1,19}$/i;
 
@@ -70,22 +72,29 @@ const hideModal = () => {
   scaleControlValue.value = '100%';
   preview.style.transform = 'none';
   imageOverlay.classList.add('hidden');
+  body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
+  cancelUploadButton.removeEventListener('click', onCancelButtonClick);
+  imageOverlay.removeEventListener('click', onOverlayClick);
   imageUploadForm.reset();
   pristine.reset();
 };
+
 // Функция показа модалки
 const showModal = () => {
   initSliderAndScale();
+  body.classList.add('modal-open');
 
   document.addEventListener('keydown', onDocumentKeydown);
   imageOverlay.classList.remove('hidden');
-  imageOverlay.addEventListener('click', (evt) => {
-    if (evt.target === imageOverlay) {
-      hideModal();
-    }
-  });
+  imageOverlay.addEventListener('click', onOverlayClick);
 };
+
+function onOverlayClick(evt) {
+  if (evt.target === imageOverlay) {
+    hideModal();
+  }
+}
 
 function onDocumentKeydown(evt) { // Функция для проверки является ли нажатая клавиша esc
   if (evt.key === 'Escape' && !isTextFieldFocused()) {
@@ -95,7 +104,7 @@ function onDocumentKeydown(evt) { // Функция для проверки яв
 }
 
 // Функция по загрузки файла с устройства
-const uploadImage = (evt) => {
+const onImageInputChange = (evt) => {
   const files = evt.target.files; // Массив файлов которые выбрал пользователь
 
   if (files.length) { // Проверка на то что массив с файлами не пустой
@@ -110,20 +119,23 @@ const uploadImage = (evt) => {
 
     fileReader.readAsDataURL(file); // Метод позволяющий прочитать файл как url
   }
-
 };
 
-imageInput.addEventListener('change', uploadImage); // Добавляем событие загрузки файла
+function onCancelButtonClick() {
+  hideModal();
+}
 
-cancelUploadButton.addEventListener('click', hideModal); // Закрытие модалки по нажатию на кнопку закрытия
+imageInput.addEventListener('change', onImageInputChange); // Добавляем событие загрузки файла
 
-const handleErrorKeyDown = (event) => {
+cancelUploadButton.addEventListener('click', onCancelButtonClick); // Закрытие модалки по нажатию на кнопку закрытия
+
+const onErrorEscapePress = (event) => {
   if (event.key === 'Escape') {
     hideError();
   }
 };
 
-const handleErrorClick = (event) => {
+const onCloseErrorClick = (event) => {
   if (
     event.target.classList.contains('error') ||
     event.target.classList.contains('error__button')
@@ -136,8 +148,8 @@ function hideError() {
   const child = document.querySelector('.error');
   document.body.removeChild(child);
   document.addEventListener('keydown', onDocumentKeydown);
-  document.removeEventListener('keydown', handleErrorKeyDown);
-  document.removeEventListener('click', handleErrorClick);
+  document.removeEventListener('keydown', onErrorEscapePress);
+  document.removeEventListener('click', onCloseErrorClick);
 }
 
 const showError = () => {
@@ -148,17 +160,18 @@ const showError = () => {
   document.removeEventListener('keydown', onDocumentKeydown);
 
 
-  document.addEventListener('keydown', handleErrorKeyDown);
-  document.addEventListener('click', handleErrorClick);
+  document.addEventListener('keydown', onErrorEscapePress);
+  document.addEventListener('click', onCloseErrorClick);
+  submitButton.setAttribute('disabled', false);
 };
 
-const handleSuccessKeyDown = (event) => {
+const onSuccessEscapePress = (event) => {
   if (event.key === 'Escape') {
     hideSuccess();
   }
 };
 
-const handleSuccessClick = (event) => {
+const onSuccessButtonClick = (event) => {
   if (
     event.target.classList.contains('success') ||
     event.target.classList.contains('success__button')
@@ -170,8 +183,8 @@ const handleSuccessClick = (event) => {
 function hideSuccess() {
   const child = document.querySelector('.success');
   document.body.removeChild(child);
-  document.removeEventListener('keydown', handleSuccessKeyDown);
-  document.removeEventListener('click', handleSuccessClick);
+  document.removeEventListener('keydown', onSuccessEscapePress);
+  document.removeEventListener('click', onSuccessButtonClick);
 }
 
 const showSuccess = () => {
@@ -181,13 +194,15 @@ const showSuccess = () => {
   document.body.appendChild(succsessClone);
   hideModal();
 
-  document.addEventListener('keydown', handleSuccessKeyDown);
-  document.addEventListener('click', handleSuccessClick);
+  document.addEventListener('keydown', onSuccessEscapePress);
+  document.addEventListener('click', onSuccessButtonClick);
+  submitButton.setAttribute('disabled', false);
 };
 
 const addUploadImageHandler = () => {
   imageUploadForm.addEventListener('submit', (evt) => { // Отправка формы
     evt.preventDefault();
+    submitButton.setAttribute('disabled', true);
     const isValid = pristine.validate();
     if (isValid) {
       const formData = new FormData(evt.target);
