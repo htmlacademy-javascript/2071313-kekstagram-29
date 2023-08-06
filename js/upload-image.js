@@ -11,6 +11,7 @@ const hashtagField = imageOverlay.querySelector('.text__hashtags');
 const commentField = imageOverlay.querySelector('.text__description');
 const submitButton = imageOverlay.querySelector('.img-upload__submit');
 const imageUploadForm = document.querySelector('.img-upload__form');
+const effectPreviews = imageOverlay.querySelectorAll('.effects__preview');
 const HASHTAG_PATTERN = /^#[a-zа-яё0-9]{1,19}$/i;
 
 // Проверка на дублирование хештегов
@@ -84,7 +85,7 @@ const hideModal = () => {
 const showModal = () => {
   initSliderAndScale();
   body.classList.add('modal-open');
-
+  cancelUploadButton.addEventListener('click', onCancelButtonClick); // Закрытие модалки по нажатию на кнопку закрытия
   document.addEventListener('keydown', onDocumentKeydown);
   imageOverlay.classList.remove('hidden');
   imageOverlay.addEventListener('click', onOverlayClick);
@@ -113,7 +114,9 @@ const onImageInputChange = (evt) => {
 
     fileReader.addEventListener('load', (event) => { // Навешиваем событие load на загрузку файла
       preview.src = event.target.result; // Заменяем путь к файлу
-
+      effectPreviews.forEach((el) => {
+        el.style.backgroundImage = `url(${event.target.result})`;
+      });
       showModal();
     });
 
@@ -127,7 +130,6 @@ function onCancelButtonClick() {
 
 imageInput.addEventListener('change', onImageInputChange); // Добавляем событие загрузки файла
 
-cancelUploadButton.addEventListener('click', onCancelButtonClick); // Закрытие модалки по нажатию на кнопку закрытия
 
 const onErrorEscapePress = (event) => {
   if (event.key === 'Escape') {
@@ -162,7 +164,7 @@ const showError = () => {
 
   document.addEventListener('keydown', onErrorEscapePress);
   document.addEventListener('click', onCloseErrorClick);
-  submitButton.setAttribute('disabled', false);
+  submitButton.removeAttribute('disabled');
 };
 
 const onSuccessEscapePress = (event) => {
@@ -196,7 +198,7 @@ const showSuccess = () => {
 
   document.addEventListener('keydown', onSuccessEscapePress);
   document.addEventListener('click', onSuccessButtonClick);
-  submitButton.setAttribute('disabled', false);
+  submitButton.removeAttribute('disabled');
 };
 
 const addUploadImageHandler = () => {
